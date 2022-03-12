@@ -1,5 +1,11 @@
 <?php
+session_start();
 include('./config/database.php');
+
+if (!isset($_SESSION['isLogin'])) {
+    header('Location: ./landing.php');
+}
+
 $books = mysqli_query($DB_CONN, "SELECT books.*, GROUP_CONCAT(i.file SEPARATOR ',') AS images
     FROM books
     LEFT JOIN images i ON (books.id = i.book_id)
@@ -59,6 +65,7 @@ if (isset($_POST["title"]) && isset($_POST["year"]) && isset($_POST["description
 
 <body>
     <div class="container my-5">
+        <a href="landing.php?function=logout" class="mb-5">logout! </a>, <span><?= $_SESSION['name'] ?></span>
         <div class="d-flex justify-content-between">
             <h3>
                 List of books
@@ -109,6 +116,7 @@ if (isset($_POST["title"]) && isset($_POST["year"]) && isset($_POST["description
             </tbody>
         </table>
     </div>
+
 
     <!-- Add New Book Modal -->
     <div class="modal fade" id="addNewBookModal" tabindex="-1" aria-labelledby="addNewBookModalLabel" aria-hidden="true">
